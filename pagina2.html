@@ -229,9 +229,9 @@ db.on("value",snap=>{
   podio.innerHTML="";
   lista.innerHTML="";
 
-  if(jugadores[0]) lista.appendChild(crearCard(jugadores[0],"CAPITÁN","capitan",1));
-  if(jugadores[1]) lista.appendChild(crearCard(jugadores[1],"VICE-CAPITÁN","",2));
-  if(jugadores[2]) lista.appendChild(crearCard(jugadores[2],"VICE-CAPITÁN JR","",3));
+  if(jugadores[0]) lista.appendChild(crearCard(jugadores[0],"REY PIRATA","capitan",1));
+  if(jugadores[1]) lista.appendChild(crearCard(jugadores[1],"YONKO","",2));
+  if(jugadores[2]) lista.appendChild(crearCard(jugadores[2],"SUPER-NOVA","",3));
 
   jugadores.slice(3).forEach((j,i)=>{
     lista.appendChild(crearCard(j,"","",i+4));
@@ -241,3 +241,4 @@ db.on("value",snap=>{
 
 </body>
 </html>
+
