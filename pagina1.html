@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <title>Admin Ranking</title>
 
+<!-- 🔒 PROTECCIÓN LOGIN (NO TOCAR) -->
+<script>
+if(localStorage.getItem("admin")!=="ok"){
+  location.href="index.html";
+}
+</script>
+
 <style>
 body{
   background:#000;
@@ -38,6 +45,7 @@ button{
 }
 </style>
 </head>
+
 <body>
 
 <h2>🏴‍☠️ Panel del Capitán</h2>
@@ -77,10 +85,6 @@ const db = firebase.database();
 </script>
 
 <script>
-if(localStorage.getItem("admin")!=="ok"){
-  location.href="index.html";
-}
-
 let jugadores = {};
 
 db.ref("jugadores").on("value", snap=>{
@@ -140,4 +144,3 @@ function del(id){
 
 </body>
 </html>
-
