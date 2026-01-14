@@ -17,11 +17,16 @@ body{
     url("fondo.jpg") center/cover fixed;
   color:#f3e7cf;
   font-family:"Playfair Display", serif;
+  transition:.4s;
+}
+
+body.gigante{
+  font-size:1.15em;
 }
 
 h2{
   text-align:center;
-  margin-bottom:70px;
+  margin-bottom:50px;
   font-size:46px;
   letter-spacing:5px;
   font-family:"Cinzel", serif;
@@ -40,12 +45,36 @@ h2{
   z-index:100;
 }
 
-/* ================= PODIO DESKTOP ================= */
+.fullscreen{
+  position:fixed;
+  top:20px;
+  left:20px;
+  padding:14px 22px;
+  font-family:"Cinzel", serif;
+  background:#222;
+  color:#f6d48a;
+  border:1px solid #c9a44c;
+  border-radius:14px;
+  cursor:pointer;
+  z-index:100;
+}
+
+/* ================= PERGAMINO ================= */
+.pergamino{
+  height:18px;
+  margin:70px auto;
+  max-width:700px;
+  background:
+    linear-gradient(to right, transparent, #c9a44c, transparent);
+  opacity:.7;
+}
+
+/* ================= PODIO ================= */
 .podio{
   display:flex;
   justify-content:center;
   gap:40px;
-  margin-bottom:120px;
+  margin-bottom:60px;
 }
 
 .podio .card{
@@ -58,7 +87,7 @@ h2{
   display:flex;
   flex-direction:column;
   gap:60px;
-  max-width:1200px;
+  max-width:1100px;
   margin:auto;
 }
 
@@ -66,12 +95,13 @@ h2{
 .card{
   display:flex;
   align-items:center;
-  gap:40px;
+  gap:22px;
   opacity:0;
   transform:translateY(30px);
   animation:entrada .6s ease forwards;
 }
 
+/* ================= POSTER ================= */
 .poster{
   width:320px;
   height:440px;
@@ -82,31 +112,28 @@ h2{
   position:relative;
 }
 
+body.gigante .poster{
+  transform:scale(1.1);
+}
+
 /* ================= CAPITÁN ================= */
 .capitan .poster{
   border:6px solid gold;
   animation:brillo 2s infinite alternate;
 }
 
-.capitan .corona{
+.corona{
   position:absolute;
-  top:-40px;
+  top:-38px;
   left:50%;
   transform:translateX(-50%);
   font-size:46px;
   animation:flotar 2s ease-in-out infinite;
 }
 
-@keyframes flotar{
-  0%{transform:translate(-50%,0);}
-  50%{transform:translate(-50%,-10px);}
-  100%{transform:translate(-50%,0);}
-}
-
 /* ================= TEXTO ================= */
 .info{
-  flex:1;
-  text-align:right;
+  max-width:420px;
 }
 
 .podio .info{
@@ -133,10 +160,20 @@ h2{
   text-transform:uppercase;
 }
 
+/* 💰 MONEDAS */
 .recompensa{
   margin-top:12px;
   font-size:30px;
   color:#f1c76a;
+  position:relative;
+}
+
+.recompensa::after{
+  content:"🪙🪙";
+  position:absolute;
+  right:-40px;
+  top:-10px;
+  animation:monedas 2.5s infinite ease-in-out;
 }
 
 /* ================= ANIMACIONES ================= */
@@ -149,36 +186,29 @@ h2{
   to{box-shadow:0 0 60px #ffd700;}
 }
 
-/* ================= 📱 MOBILE ================= */
+@keyframes flotar{
+  0%{transform:translate(-50%,0);}
+  50%{transform:translate(-50%,-10px);}
+  100%{transform:translate(-50%,0);}
+}
+
+@keyframes monedas{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-6px);}
+  100%{transform:translateY(0);}
+}
+
+/* ================= MOBILE ================= */
 @media(max-width:768px){
+  body{padding:0;}
+  h2,.volver,.fullscreen{display:none;}
 
-  body{
-    padding:0;
-  }
-
-  h2,.volver{
-    display:none;
-  }
-
-  .podio,.lista{
-    display:block;
-  }
-
-  .swipe{
-    height:100vh;
-    overflow-y:auto;
-    scroll-snap-type:y mandatory;
-  }
+  .podio,.lista{display:block;}
 
   .card{
     height:100vh;
     flex-direction:column;
     justify-content:center;
-    text-align:center;
-    scroll-snap-align:start;
-  }
-
-  .info{
     text-align:center;
   }
 
@@ -187,20 +217,7 @@ h2{
     height:360px;
   }
 
-  .posicion{font-size:60px;}
-  .rol{font-size:22px;}
-  .nombre{font-size:28px;}
-  .recompensa{font-size:22px;}
-
-  .capitan{
-    animation:capitanPulse 2s infinite;
-  }
-
-  @keyframes capitanPulse{
-    0%{transform:scale(1);}
-    50%{transform:scale(1.05);}
-    100%{transform:scale(1);}
-  }
+  .info{max-width:none;}
 }
 </style>
 
@@ -212,12 +229,15 @@ h2{
 <body>
 
 <button class="volver" onclick="location.href='index.html'">⬅ Inicio</button>
+<button class="fullscreen" onclick="pantallaGigante()">🖥️ MODO PANTALLA</button>
+
 <h2>🏴‍☠️ TRIPULACIÓN YONKO 🏴‍☠️</h2>
 
-<div class="swipe">
-  <div id="podio" class="podio"></div>
-  <div id="lista" class="lista"></div>
-</div>
+<div id="podio" class="podio"></div>
+
+<div class="pergamino"></div>
+
+<div id="lista" class="lista"></div>
 
 <script>
 const firebaseConfig={
@@ -230,15 +250,21 @@ const firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database().ref("jugadores");
 
-let ultimoCapitan=null;
+function pantallaGigante(){
+  document.body.classList.toggle("gigante");
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen();
+  }else{
+    document.exitFullscreen();
+  }
+}
 
-function crearCard(j,rol,pos,esCapitan=false,enPodio=false){
+function crearCard(j,rol,pos,cap=false){
   const c=document.createElement("div");
-  c.className="card"+(esCapitan?" capitan":"");
-
+  c.className="card"+(cap?" capitan":"");
   c.innerHTML=`
     <div class="poster" style="background-image:url('${j.foto}')">
-      ${esCapitan?'<div class="corona">👑</div>':''}
+      ${cap?'<div class="corona">👑</div>':''}
     </div>
     <div class="info">
       <div class="posicion">#${pos}</div>
@@ -256,16 +282,8 @@ db.on("value",snap=>{
   podio.innerHTML="";
   lista.innerHTML="";
 
-  if(!jugadores.length) return;
-
-  if(ultimoCapitan && jugadores[0].id!==ultimoCapitan){
-    document.body.style.transition="background .6s";
-  }
-  ultimoCapitan=jugadores[0].id;
-
-  // PODIO 2 - 1 - 3
   if(jugadores[1]) podio.appendChild(crearCard(jugadores[1],"YONKO",2));
-  if(jugadores[0]) podio.appendChild(crearCard(jugadores[0],"REY PIRATA",1,true,true));
+  if(jugadores[0]) podio.appendChild(crearCard(jugadores[0],"REY PIRATA",1,true));
   if(jugadores[2]) podio.appendChild(crearCard(jugadores[2],"SUPER-NOVA",3));
 
   jugadores.slice(3).forEach((j,i)=>{
