@@ -2,12 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#000000">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ranking Pirata</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
@@ -22,7 +17,6 @@ body{
     url("fondo.jpg") center/cover fixed;
   color:#f3e7cf;
   font-family:"Playfair Display", serif;
-  overflow-x:hidden;
 }
 
 h2{
@@ -35,19 +29,18 @@ h2{
 
 .volver{
   position:fixed;
-  top:16px;
-  right:16px;
-  padding:12px 20px;
+  top:20px;
+  right:20px;
+  padding:14px 28px;
   font-family:"Cinzel", serif;
   background:linear-gradient(135deg,#c9a44c,#f6d48a);
   border:none;
   border-radius:14px;
   cursor:pointer;
-  font-size:14px;
   z-index:100;
 }
 
-/* ================= PODIO ================= */
+/* ================= PODIO DESKTOP ================= */
 .podio{
   display:flex;
   justify-content:center;
@@ -55,36 +48,33 @@ h2{
   margin-bottom:120px;
 }
 
+.podio .card{
+  flex-direction:column;
+  text-align:center;
+}
+
 /* ================= LISTA ================= */
 .lista{
   display:flex;
   flex-direction:column;
-  gap:70px;
+  gap:60px;
   max-width:1200px;
   margin:auto;
 }
 
-/* ================= CARD BASE ================= */
+/* ================= CARD ================= */
 .card{
   display:flex;
   align-items:center;
-  gap:50px;
+  gap:40px;
   opacity:0;
-  transform:translateY(40px);
-  animation:entrada .7s ease forwards;
+  transform:translateY(30px);
+  animation:entrada .6s ease forwards;
 }
 
-/* ================= PODIO CARD ================= */
-.podio-card{
-  flex-direction:column;
-  text-align:center;
-  gap:18px;
-}
-
-/* ================= POSTER ================= */
 .poster{
-  width:300px;
-  height:420px;
+  width:320px;
+  height:440px;
   background-size:cover;
   background-position:center;
   border-radius:26px;
@@ -92,56 +82,87 @@ h2{
   position:relative;
 }
 
-/* 👑 CORONA */
-.corona{
+/* ================= CAPITÁN ================= */
+.capitan .poster{
+  border:6px solid gold;
+  animation:brillo 2s infinite alternate;
+}
+
+.capitan .corona{
   position:absolute;
-  top:-48px;
+  top:-40px;
   left:50%;
   transform:translateX(-50%);
-  font-size:52px;
-  animation:flotar 2.2s ease-in-out infinite;
+  font-size:46px;
+  animation:flotar 2s ease-in-out infinite;
 }
 
 @keyframes flotar{
   0%{transform:translate(-50%,0);}
-  50%{transform:translate(-50%,-12px);}
+  50%{transform:translate(-50%,-10px);}
   100%{transform:translate(-50%,0);}
 }
 
-/* ================= TEXTOS ================= */
+/* ================= TEXTO ================= */
+.info{
+  flex:1;
+  text-align:right;
+}
+
+.podio .info{
+  text-align:center;
+}
+
 .posicion{
-  font-size:90px;
+  font-size:80px;
   font-family:"Cinzel", serif;
   color:#d4af37;
 }
 
 .rol{
   font-family:"Cinzel", serif;
-  font-size:32px;
+  font-size:30px;
   letter-spacing:4px;
+  margin-bottom:10px;
   color:#f6d48a;
 }
 
 .nombre{
-  font-size:42px;
+  font-size:38px;
   font-weight:800;
   text-transform:uppercase;
 }
 
 .recompensa{
-  font-size:32px;
+  margin-top:12px;
+  font-size:30px;
   color:#f1c76a;
 }
 
+/* ================= ANIMACIONES ================= */
 @keyframes entrada{
   to{opacity:1;transform:none;}
 }
 
-/* ================= 📱 MOBILE ================= */
-@media (max-width:768px){
+@keyframes brillo{
+  from{box-shadow:0 0 20px gold;}
+  to{box-shadow:0 0 60px #ffd700;}
+}
 
-  body{padding:0;}
-  h2,.volver{display:none;}
+/* ================= 📱 MOBILE ================= */
+@media(max-width:768px){
+
+  body{
+    padding:0;
+  }
+
+  h2,.volver{
+    display:none;
+  }
+
+  .podio,.lista{
+    display:block;
+  }
 
   .swipe{
     height:100vh;
@@ -149,40 +170,36 @@ h2{
     scroll-snap-type:y mandatory;
   }
 
-  .podio{
-    height:100vh;
-    align-items:center;
-    scroll-snap-align:start;
-  }
-
-  .lista{gap:0;}
-
   .card{
     height:100vh;
     flex-direction:column;
     justify-content:center;
-    gap:22px;
+    text-align:center;
     scroll-snap-align:start;
   }
 
-  /* 📐 MISMO TAMAÑO */
+  .info{
+    text-align:center;
+  }
+
   .poster{
     width:260px;
     height:360px;
   }
 
-  .posicion{font-size:56px;}
+  .posicion{font-size:60px;}
   .rol{font-size:22px;}
   .nombre{font-size:28px;}
   .recompensa{font-size:22px;}
 
-  .nuevo-capitan{
-    animation:cambioCapitan 1.1s ease;
+  .capitan{
+    animation:capitanPulse 2s infinite;
   }
 
-  @keyframes cambioCapitan{
-    from{opacity:0;transform:scale(.85);}
-    to{opacity:1;transform:scale(1);}
+  @keyframes capitanPulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.05);}
+    100%{transform:scale(1);}
   }
 }
 </style>
@@ -197,7 +214,7 @@ h2{
 <button class="volver" onclick="location.href='index.html'">⬅ Inicio</button>
 <h2>🏴‍☠️ TRIPULACIÓN YONKO 🏴‍☠️</h2>
 
-<div id="contenedor" class="swipe">
+<div class="swipe">
   <div id="podio" class="podio"></div>
   <div id="lista" class="lista"></div>
 </div>
@@ -213,21 +230,22 @@ const firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database().ref("jugadores");
 
-let capitanActual=null;
+let ultimoCapitan=null;
 
-function crearCard(j,rol="",pos=0,esCapitan=false,podio=false){
+function crearCard(j,rol,pos,esCapitan=false,enPodio=false){
   const c=document.createElement("div");
-  c.className="card"+(podio?" podio-card":"");
+  c.className="card"+(esCapitan?" capitan":"");
 
   c.innerHTML=`
-    <div class="posicion">#${pos}</div>
-    <div class="rol">${rol}</div>
-    <div class="nombre">${j.nombre}</div>
-    <div class="recompensa">${(j.puntaje+1000000).toLocaleString()} 💰</div>
     <div class="poster" style="background-image:url('${j.foto}')">
-      ${esCapitan?`<div class="corona">👑</div>`:""}
+      ${esCapitan?'<div class="corona">👑</div>':''}
     </div>
-  `;
+    <div class="info">
+      <div class="posicion">#${pos}</div>
+      ${rol?`<div class="rol">${rol}</div>`:""}
+      <div class="nombre">${j.nombre}</div>
+      <div class="recompensa">${(j.puntaje+1000000).toLocaleString()} 💰</div>
+    </div>`;
   return c;
 }
 
@@ -238,19 +256,21 @@ db.on("value",snap=>{
   podio.innerHTML="";
   lista.innerHTML="";
 
-  const nuevoCapitan=jugadores[0]?.nombre;
+  if(!jugadores.length) return;
 
-  jugadores.slice(0,3).forEach((j,i)=>{
-    podio.appendChild(
-      crearCard(j,["REY PIRATA","YONKO","SUPER-NOVA"][i],i+1,i===0,true)
-    );
-  });
+  if(ultimoCapitan && jugadores[0].id!==ultimoCapitan){
+    document.body.style.transition="background .6s";
+  }
+  ultimoCapitan=jugadores[0].id;
+
+  // PODIO 2 - 1 - 3
+  if(jugadores[1]) podio.appendChild(crearCard(jugadores[1],"YONKO",2));
+  if(jugadores[0]) podio.appendChild(crearCard(jugadores[0],"REY PIRATA",1,true,true));
+  if(jugadores[2]) podio.appendChild(crearCard(jugadores[2],"SUPER-NOVA",3));
 
   jugadores.slice(3).forEach((j,i)=>{
-    lista.appendChild(crearCard(j,"",i+4,false,false));
+    lista.appendChild(crearCard(j,"",i+4));
   });
-
-  capitanActual=nuevoCapitan;
 });
 </script>
 
