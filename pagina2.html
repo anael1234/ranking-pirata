@@ -8,72 +8,55 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Playfair+Display:wght@600;800&display=swap" rel="stylesheet">
 
 <style>
-/* ===== BASE ===== */
+/* ================= BASE ================= */
 body{
   margin:0;
-  padding:60px;
+  padding:50px;
   background:
     linear-gradient(rgba(0,0,0,.9), rgba(0,0,0,.9)),
     url("fondo.jpg") center/cover fixed;
   color:#f3e7cf;
   font-family:"Playfair Display", serif;
-  transition:.3s;
 }
-
-body.gigante{ font-size:1.15em; }
 
 h2{
   text-align:center;
-  margin-bottom:30px;
   font-size:46px;
   letter-spacing:5px;
+  margin-bottom:30px;
   font-family:"Cinzel", serif;
 }
 
-/* ===== BOTONES ===== */
+/* ================= BOTONES ================= */
 .volver{
   position:fixed;
-  top:16px;
-  right:16px;
+  top:12px;
+  right:12px;
   padding:8px 14px;
-  font-size:13px;
+  font-size:12px;
   font-family:"Cinzel", serif;
-  background:linear-gradient(135deg,#c9a44c,#f6d48a);
+  background:#c9a44c;
   border:none;
   border-radius:10px;
   cursor:pointer;
   z-index:100;
 }
 
-.fullscreen{
-  position:fixed;
-  top:16px;
-  left:16px;
-  padding:8px 14px;
-  font-size:13px;
-  font-family:"Cinzel", serif;
-  background:#111;
-  color:#f6d48a;
-  border:1px solid #c9a44c;
-  border-radius:10px;
-  cursor:pointer;
-  z-index:100;
-}
-
-/* ===== BUSCADOR ===== */
+/* ================= BUSCADOR ================= */
 .busqueda{
-  display:block;
-  margin:0 auto 50px;
-  padding:12px 18px;
-  width:320px;
-  max-width:90%;
-  border-radius:14px;
-  border:none;
-  font-size:16px;
-  outline:none;
+  max-width:400px;
+  margin:20px auto 40px;
 }
 
-/* ===== PODIO ===== */
+.busqueda input{
+  width:100%;
+  padding:12px;
+  font-size:16px;
+  border-radius:12px;
+  border:none;
+}
+
+/* ================= PODIO ================= */
 .podio{
   display:flex;
   justify-content:center;
@@ -86,7 +69,7 @@ h2{
   text-align:center;
 }
 
-/* ===== LISTA ===== */
+/* ================= LISTA ================= */
 .lista{
   display:flex;
   flex-direction:column;
@@ -95,94 +78,80 @@ h2{
   margin:auto;
 }
 
-/* ===== CARD ===== */
+/* ================= CARD ================= */
 .card{
   display:flex;
   align-items:center;
   gap:22px;
-  opacity:0;
-  transform:translateY(30px);
-  animation:entrada .6s ease forwards;
+  animation:fade .6s ease forwards;
 }
 
-/* ===== POSTER ===== */
 .poster{
   width:320px;
   height:440px;
   background-size:cover;
   background-position:center;
   border-radius:26px;
-  box-shadow:0 24px 42px rgba(0,0,0,.85);
+  box-shadow:0 20px 40px rgba(0,0,0,.8);
   position:relative;
 }
 
-/* ===== CAPITÁN ===== */
 .capitan .poster{
   border:6px solid gold;
-  animation:brillo 2s infinite alternate;
 }
 
 .corona{
   position:absolute;
-  top:-36px;
+  top:-35px;
   left:50%;
   transform:translateX(-50%);
-  font-size:46px;
-  animation:flotar 2s infinite;
+  font-size:42px;
 }
 
-/* ===== TEXTO ===== */
-.info{ max-width:420px; }
-
-.podio .info{ text-align:center; }
+.info{
+  max-width:420px;
+}
 
 .posicion{
-  font-size:78px;
-  font-family:"Cinzel", serif;
+  font-size:70px;
   color:#d4af37;
+  font-family:"Cinzel", serif;
 }
 
 .rol{
   font-family:"Cinzel", serif;
-  font-size:28px;
-  letter-spacing:4px;
+  font-size:26px;
   color:#f6d48a;
 }
 
 .nombre{
   font-size:36px;
   font-weight:800;
-  text-transform:uppercase;
 }
 
 .recompensa{
-  margin-top:12px;
   font-size:28px;
   color:#f1c76a;
 }
 
-/* ===== ANIMACIONES ===== */
-@keyframes entrada{
+/* ================= ANIM ================= */
+@keyframes fade{
+  from{opacity:0;transform:translateY(20px);}
   to{opacity:1;transform:none;}
 }
-@keyframes brillo{
-  from{box-shadow:0 0 20px gold;}
-  to{box-shadow:0 0 60px #ffd700;}
-}
-@keyframes flotar{
-  0%{transform:translate(-50%,0);}
-  50%{transform:translate(-50%,-10px);}
-  100%{transform:translate(-50%,0);}
-}
 
-/* ===== 📱 MOBILE ===== */
+/* ================= MOBILE ================= */
 @media(max-width:768px){
   body{padding:0;}
-  h2,.volver,.fullscreen{display:none;}
+  h2,.volver{display:none;}
 
   .podio{display:none;}
 
-  .lista .card{
+  .lista{
+    gap:0;
+  }
+
+  .card{
     height:100vh;
     flex-direction:column;
     justify-content:center;
@@ -206,11 +175,12 @@ h2{
 <body>
 
 <button class="volver" onclick="location.href='index.html'">ADMIN</button>
-<button class="fullscreen" onclick="pantallaGigante()">PANTALLA</button>
 
 <h2>🏴‍☠️ TRIPULACIÓN YONKO 🏴‍☠️</h2>
 
-<input class="busqueda" placeholder="🔍 Buscar pirata..." oninput="buscar(this.value)">
+<div class="busqueda">
+  <input id="buscar" placeholder="🔍 Buscar pirata...">
+</div>
 
 <div id="podio" class="podio"></div>
 <div id="lista" class="lista"></div>
@@ -222,18 +192,19 @@ const firebaseConfig={
   databaseURL:"https://ranking-pirata-default-rtdb.firebaseio.com",
   projectId:"ranking-pirata"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database().ref("jugadores");
 
+const podio=document.getElementById("podio");
+const listaDiv=document.getElementById("lista");
+const buscar=document.getElementById("buscar");
+
 let rankingCompleto=[];
 
-function pantallaGigante(){
-  document.body.classList.toggle("gigante");
-  if(!document.fullscreenElement){
-    document.documentElement.requestFullscreen();
-  }else{
-    document.exitFullscreen();
-  }
+/* 🔎 detección móvil REAL */
+function esMobile(){
+  return window.matchMedia("(max-width: 768px)").matches;
 }
 
 function crearCard(j,rol="",cap=false){
@@ -241,13 +212,13 @@ function crearCard(j,rol="",cap=false){
   c.className="card"+(cap?" capitan":"");
   c.innerHTML=`
     <div class="poster" style="background-image:url('${j.foto}')">
-      ${cap?'<div class="corona">👑</div>':''}
+      ${cap?'<div class="corona">👑</div>':""}
     </div>
     <div class="info">
       <div class="posicion">#${j.posicion}</div>
       ${rol?`<div class="rol">${rol}</div>`:""}
       <div class="nombre">${j.nombre}</div>
-      <div class="recompensa">${(j.puntaje+1000000).toLocaleString()} 💰</div>
+      <div class="recompensa">${(j.puntaje+1000000).toLocaleString()} 🪙</div>
     </div>`;
   return c;
 }
@@ -256,28 +227,48 @@ function render(lista){
   podio.innerHTML="";
   listaDiv.innerHTML="";
 
-  lista.forEach(j=>{
-    if(j.posicion===1) podio.appendChild(crearCard(j,"REY PIRATA",true));
-    else if(j.posicion===2) podio.appendChild(crearCard(j,"YONKO"));
-    else if(j.posicion===3) podio.appendChild(crearCard(j,"SUPER-NOVA"));
-    else listaDiv.appendChild(crearCard(j));
-  });
-}
+  if(esMobile()){
+    lista.forEach(j=>{
+      listaDiv.appendChild(
+        crearCard(
+          j,
+          j.posicion===1?"REY PIRATA":
+          j.posicion===2?"YONKO":
+          j.posicion===3?"SUPER-NOVA":"",
+          j.posicion===1
+        )
+      );
+    });
+  }else{
+    const p1=lista.find(j=>j.posicion===1);
+    const p2=lista.find(j=>j.posicion===2);
+    const p3=lista.find(j=>j.posicion===3);
 
-function buscar(txt){
-  const q=txt.toLowerCase().trim();
-  if(!q){ render(rankingCompleto); return; }
-  render(rankingCompleto.filter(j=>j.nombre.toLowerCase().includes(q)));
-}
+    if(p2) podio.appendChild(crearCard(p2,"YONKO"));
+    if(p1) podio.appendChild(crearCard(p1,"REY PIRATA",true));
+    if(p3) podio.appendChild(crearCard(p3,"SUPER-NOVA"));
 
-const listaDiv=document.getElementById("lista");
+    lista.filter(j=>j.posicion>3)
+      .forEach(j=>listaDiv.appendChild(crearCard(j)));
+  }
+}
 
 db.on("value",snap=>{
   rankingCompleto=Object.values(snap.val()||{})
     .sort((a,b)=>b.puntaje-a.puntaje)
     .map((j,i)=>({...j,posicion:i+1}));
+
   render(rankingCompleto);
 });
+
+buscar.oninput=()=>{
+  const q=buscar.value.toLowerCase();
+  render(
+    rankingCompleto.filter(j=>j.nombre.toLowerCase().includes(q))
+  );
+};
+
+window.addEventListener("resize",()=>render(rankingCompleto));
 </script>
 
 </body>
