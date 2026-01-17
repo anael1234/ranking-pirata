@@ -23,29 +23,11 @@ h2{
   margin-bottom:20px;
 }
 
-/* ================= CONTROLES ================= */
 input,button{
   padding:8px;
   margin:5px;
 }
 
-input[type="number"]{
-  width:100px;
-  text-align:center;
-}
-
-button{
-  background:#cfa93f;
-  border:none;
-  cursor:pointer;
-  border-radius:6px;
-  transition:.2s;
-}
-button:hover{
-  transform:scale(1.05);
-}
-
-/* ================= TABLA ================= */
 table{
   width:100%;
   border-collapse:collapse;
@@ -65,41 +47,29 @@ img{
   object-fit:cover;
 }
 
-/* ================= ANIMACIONES ================= */
+button{
+  background:#cfa93f;
+  border:none;
+  cursor:pointer;
+  transition:.2s;
+}
+
+button:hover{
+  transform:scale(1.1);
+}
+
+input[type="number"]{
+  width:100px;
+  text-align:center;
+}
+
 tr{
-  animation:entrada .4s ease;
+  animation:fade .3s ease;
 }
 
-@keyframes entrada{
-  from{opacity:0; transform:translateY(10px);}
-  to{opacity:1; transform:none;}
-}
-
-.sumar{
-  animation:sumar .25s ease;
-}
-@keyframes sumar{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.15);}
-  100%{transform:scale(1);}
-}
-
-.restar{
-  animation:restar .25s ease;
-}
-@keyframes restar{
-  0%{transform:translateX(0);}
-  25%{transform:translateX(-3px);}
-  50%{transform:translateX(3px);}
-  75%{transform:translateX(-3px);}
-  100%{transform:none;}
-}
-
-.eliminar{
-  animation:eliminar .3s ease forwards;
-}
-@keyframes eliminar{
-  to{opacity:0; transform:translateX(40px);}
+@keyframes fade{
+  from{opacity:0;}
+  to{opacity:1;}
 }
 </style>
 </head>
@@ -111,7 +81,6 @@ tr{
 <input id="nombre" placeholder="Nombre">
 <input id="puntaje" type="number" placeholder="Recompensa" value="0">
 <input id="foto" type="file" accept="image/*">
-
 <button onclick="agregar()">Agregar</button>
 <button onclick="window.open('pagina2.html')">Ver Ranking</button>
 
@@ -146,25 +115,29 @@ const db = firebase.database();
 <script>
 let jugadores = {};
 
-/* ================= CARGA ================= */
+/* ===== ESCUCHA FIREBASE ===== */
 db.ref("jugadores").on("value", snap=>{
   jugadores = snap.val() || {};
   render();
 });
 
-/* ================= GUARDAR ================= */
-function guardar(){
-  db.ref("jugadores").set(jugadores);
+/* ===== GUARDAR 1 JUGADOR (CLAVE) ===== */
+function guardarJugador(id, data){
+  return db.ref("jugadores/"+id).set(data)
+    .catch(e=>{
+      alert("Error Firebase");
+      console.error(e);
+    });
 }
 
-/* ================= RENDER ================= */
+/* ===== RENDER ===== */
 function render(){
   tabla.innerHTML="";
   Object.values(jugadores)
     .sort((a,b)=>b.puntaje-a.puntaje)
     .forEach(j=>{
       tabla.innerHTML += `
-        <tr id="row-${j.id}">
+        <tr>
           <td><img src="${j.foto}"></td>
           <td>${j.nombre}</td>
           <td>
@@ -174,64 +147,73 @@ function render(){
           <td>
             <button onclick="mod('${j.id}',1)">+</button>
             <button onclick="mod('${j.id}',-1)">−</button>
-            <button onclick="del('${j.id}')">X</button>
+            <button onclick="delJugador('${j.id}')">X</button>
           </td>
         </tr>`;
     });
 }
 
-/* ================= AGREGAR ================= */
+/* ===== AGREGAR (IMAGEN REDUCIDA) ===== */
 function agregar(){
   const n = nombre.value.trim();
-  const p = parseInt(puntaje.value);
+  const p = parseInt(puntaje.value) || 0;
   const f = foto.files[0];
 
-  if(!n || p === null || isNaN(p) || !f){
-    alert("Completa todo");
+  if(!n || !f){
+    alert("Nombre y foto obligatorios");
     return;
   }
 
-  const r = new FileReader();
-  r.onload = e=>{
+  const reader = new FileReader();
+  const img = new Image();
+
+  reader.onload = e => img.src = e.target.result;
+
+  img.onload = ()=>{
+    const canvas = document.createElement("canvas");
+    const size = 300;
+    canvas.width = size;
+    canvas.height = size;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img,0,0,size,size);
+
+    const base64 = canvas.toDataURL("image/jpeg",0.6);
+
     const id = Date.now().toString();
-    jugadores[id] = {
+
+    guardarJugador(id,{
       id,
       nombre:n,
       puntaje:p,
-      foto:e.target.result
-    };
-    guardar();
+      foto:base64
+    });
+
     nombre.value="";
     puntaje.value="0";
     foto.value="";
   };
-  r.readAsDataURL(f);
+
+  reader.readAsDataURL(f);
 }
 
-/* ================= MODIFICAR ================= */
+/* ===== MODIFICAR ===== */
 function mod(id,v){
-  jugadores[id].puntaje += v;
-  guardar();
-
-  const row=document.getElementById("row-"+id);
-  row.classList.remove("sumar","restar");
-  row.classList.add(v>0?"sumar":"restar");
+  const j = jugadores[id];
+  if(!j) return;
+  j.puntaje += v;
+  guardarJugador(id,j);
 }
 
-/* ================= SET MANUAL ================= */
 function setPuntaje(id,val){
-  jugadores[id].puntaje = parseInt(val) || 0;
-  guardar();
+  const j = jugadores[id];
+  if(!j) return;
+  j.puntaje = parseInt(val) || 0;
+  guardarJugador(id,j);
 }
 
-/* ================= ELIMINAR ================= */
-function del(id){
-  const row=document.getElementById("row-"+id);
-  row.classList.add("eliminar");
-  setTimeout(()=>{
-    delete jugadores[id];
-    guardar();
-  },300);
+function delJugador(id){
+  db.ref("jugadores/"+id).remove();
 }
 </script>
 
