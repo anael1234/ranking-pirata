@@ -93,20 +93,19 @@ h2{
   border-radius:26px;
   box-shadow:0 20px 40px rgba(0,0,0,.8);
   position:relative;
+  overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
-
-/* 🔥 IMAGEN SIN RECORTE */
 .poster img{
-  height:100%;        /* 👈 manda el ALTO */
-  width:auto;         /* 👈 mantiene proporción */
-  max-width:100%;     /* 👈 evita que se salga */
-  object-fit:contain; /* seguridad */
+  width:100%;          /* llena ancho */
+  height:100%;         /* llena alto */
+  object-fit:fill;    /* 👈 NO recorta */
   border-radius:26px;
 }
+
 
 
 /* CAPITÁN */
@@ -286,6 +285,7 @@ window.addEventListener("resize",()=>render(ranking));
 
 </body>
 </html>
+
 
 
 
